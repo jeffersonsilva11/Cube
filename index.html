@@ -1,108 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AR Cube</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/three.js/build/ar-threex.js"></script>
+  <title>AR Sphere</title>
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.7.7/aframe/build/aframe-ar.js"></script>
   <style>
     body { margin: 0; overflow: hidden; }
-    canvas { display: block; }
   </style>
 </head>
 <body>
-  <script>
-    let scene, camera, renderer, markerRoot, cube;
-
-    init();
-    animate();
-
-    function init() {
-      // Scene
-      scene = new THREE.Scene();
-
-      // Camera
-      camera = new THREE.Camera();
-      scene.add(camera);
-
-      // Renderer
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setClearColor(new THREE.Color('lightgrey'), 0);
-      document.body.appendChild(renderer.domElement);
-
-      // AR Toolkit Source
-      let arToolkitSource = new THREEx.ArToolkitSource({ sourceType: 'webcam' });
-
-      arToolkitSource.init(() => {
-        setTimeout(() => {
-          onResize()
-        }, 2000);
-      });
-
-      window.addEventListener('resize', () => onResize());
-
-      // AR Toolkit Context
-      let arToolkitContext = new THREEx.ArToolkitContext({
-        cameraParametersUrl: 'https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/three.js/data/camera_para.dat',
-        detectionMode: 'mono'
-      });
-
-      arToolkitContext.init(() => {
-        camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
-      });
-
-      // Marker Root
-      markerRoot = new THREE.Group();
-      scene.add(markerRoot);
-
-      let arMarkerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
-        type: 'pattern',
-        patternUrl: 'https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/three.js/data/patt.hiro'
-      });
-
-      // Cube
-      let geometry = new THREE.BoxGeometry(1, 1, 1);
-      let material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-      cube = new THREE.Mesh(geometry, material);
-      cube.position.y = 0.5;
-      markerRoot.add(cube);
-
-      // Animation
-      cube.animationMixer = new THREE.AnimationMixer(cube);
-      let positionKF = new THREE.VectorKeyframeTrack('.position', [0, 1, 2], [0, 0, 0, 0, 1, 0, 0, 0.5, 0]);
-      let rotationKF = new THREE.VectorKeyframeTrack('.rotation', [0, 2], [0, 0, 0, 0, Math.PI * 2, 0]);
-      let clip = new THREE.AnimationClip('Action', 2, [positionKF, rotationKF]);
-      let action = cube.animationMixer.clipAction(clip);
-      action.play();
-
-      // Update loop
-      function onResize() {
-        arToolkitSource.onResizeElement();
-        arToolkitSource.copyElementSizeTo(renderer.domElement);
-        if (arToolkitContext.arController !== null) {
-          arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
-        }
-      }
-
-      function update() {
-        if (arToolkitSource.ready !== false) {
-          arToolkitContext.update(arToolkitSource.domElement);
-        }
-        if (cube.animationMixer) {
-          cube.animationMixer.update(0.01);
-        }
-      }
-
-      function render() {
-        renderer.render(scene, camera);
-      }
-
-      function animate() {
-        requestAnimationFrame(animate);
-        update();
-        render();
-      }
-    }
-  </script>
+  <a-scene embedded arjs="sourceType: webcam;">
+    <a-marker preset="hiro">
+      <a-sphere position="0 0.5 0" radius="0.25" color="red">
+        <a-animation attribute="position" to="0 1.5 0" direction="alternate" dur="1000" repeat="indefinite"></a-animation>
+      </a-sphere>
+    </a-marker>
+    <a-entity camera></a-entity>
+  </a-scene>
 </body>
 </html>
