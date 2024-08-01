@@ -1,52 +1,27 @@
-AFRAME.registerComponent('animation-handler', {
-    init: function () {
-        const el = this.el;
-        let mixer;
-        let activeAction;
-        let animations;
-        let model;
-
-        el.addEventListener('model-loaded', function (e) {
-            model = e.detail.model;
-            animations = model.animations;
-            mixer = new THREE.AnimationMixer(model);
-            activeAction = mixer.clipAction(animations[0]);
-            activeAction.play();
-
-            document.getElementById('loading').style.display = 'none';
-        });
-
-        el.sceneEl.addEventListener('click', function (evt) {
-            const intersectedEl = evt.target;
-
-            if (intersectedEl === el) {
-                const marker = el.parentNode;
-
-                if (!marker || !marker.object3D.visible) return;
-
-                if (animations.length > 0) {
-                    const lastAction = activeAction;
-                    activeAction = mixer.clipAction(animations[(animations.indexOf(activeAction._clip) + 1) % animations.length]);
-
-                    lastAction.fadeOut(0.5);
-                    activeAction.reset().fadeIn(0.5).play();
-                }
-            } else {
-                // Place the model where the user clicked
-                const camera = document.querySelector('[camera]');
-                const worldPos = new THREE.Vector3();
-                camera.object3D.getWorldPosition(worldPos);
-                const clickPosition = new THREE.Vector3(evt.detail.intersection.point.x, 0, evt.detail.intersection.point.z);
-
-                el.object3D.position.copy(clickPosition);
-                el.setAttribute('visible', 'true');
-            }
-        });
-
-        el.sceneEl.addEventListener('tick', function (e) {
-            if (mixer) mixer.update(0.01);
-        });
-    }
-});
-
-document.querySelector('#animated-model').setAttribute('animation-handler', '');
+document.addEventListener("DOMContentLoaded", () => {
+    const sceneEl = document.querySelector("a-scene");
+    
+    // GLTF Loader
+    const loader = new THREE.GLTFLoader();
+  
+    // Load the GLB model
+    loader.load('spongebob.glb', function (gltf) {
+      const model = gltf.scene;
+      
+      // Function to place the model on tap
+      const placeModel = (x, y) => {
+        const modelEl = document.createElement('a-entity');
+        modelEl.setObject3D('mesh', model.clone());
+        modelEl.setAttribute('position', { x: x, y: y, z: -2 }); // Adjust the position based on your need
+        sceneEl.appendChild(modelEl);
+      };
+  
+      // Listen for screen taps
+      sceneEl.addEventListener('click', (event) => {
+        const touch = event.touches ? event.touches[0] : event;
+        const x = (touch.clientX / window.innerWidth) * 2 - 1;
+        const y = -(touch.clientY / window.innerHeight) * 2 + 1;
+        placeModel(x, y);
+      });
+    });
+  });  
