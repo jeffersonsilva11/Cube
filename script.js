@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     model.setAttribute('visible', 'true');
 
     // Ajuste inicial para centralizar o modelo
-    model.setAttribute('position', '0 1 -3');
+    model.setAttribute('position', '0 0 -3');
 
     // Interação para arrastar o modelo
     let isUserInteracting = false,
