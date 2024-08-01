@@ -12,14 +12,14 @@
 </head>
 <body>
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-    <a-entity id="animated-model" gltf-model="url(spongebob.glb)" scale="1 1 1" position="0 0 -3" rotation="0 180 0">
-      <a-animation attribute="rotation" to="0 360 0" dur="10000" easing="linear" repeat="indefinite"></a-animation>
+    <a-entity id="animated-model" gltf-model="url(spongebob.glb)" scale="1 1 1" position="0 0 -3" rotation="0 0 0">
+      <!-- Luzes -->
+      <a-entity light="type: ambient; intensity: 1"></a-entity>
+      <a-entity light="type: directional; color: #ffffff; intensity: 2" position="1 1 0"></a-entity>
+      <a-entity light="type: directional; color: #ffffff; intensity: 2" position="-1 1 0"></a-entity>
+      <a-entity light="type: point; color: #ffffff; intensity: 2" position="0 2 2"></a-entity>
+      <a-entity light="type: point; color: #ffffff; intensity: 2" position="0 -2 2"></a-entity>
     </a-entity>
-    <a-entity light="type: ambient; intensity: 1"></a-entity>
-    <a-entity light="type: directional; color: #ffffff; intensity: 2" position="1 1 0"></a-entity>
-    <a-entity light="type: directional; color: #ffffff; intensity: 2" position="-1 1 0"></a-entity>
-    <a-entity light="type: point; color: #ffffff; intensity: 2" position="0 2 2"></a-entity>
-    <a-entity light="type: point; color: #ffffff; intensity: 2" position="0 -2 2"></a-entity>
     <a-entity camera></a-entity>
   </a-scene>
 </body>
