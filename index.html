@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AR Custom Marker</title>
+  <title>AR Cube</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.7.7/aframe/build/aframe-ar.js"></script>
   <style>
@@ -10,13 +10,28 @@
 </head>
 <body>
   <a-scene embedded arjs="sourceType: webcam;">
-    <!-- Custom marker -->
-    <a-marker type="pattern" url="logo.patt" id="customMarker">
-      <a-entity id="logo3D" position="0 1 0" scale="0.5 0.5 0.5" gltf-model="url(logo.gltf)" rotation="0 0 0">
-        <a-animation attribute="rotation" to="0 360 0" dur="5000" easing="linear" repeat="indefinite"></a-animation>
+    <a-marker preset="hiro" id="hiroMarker">
+      <a-entity id="cubeContainer">
+        <a-box position="0 0.5 0" depth="0.5" height="0.5" width="0.5" color="blue">
+          <a-animation attribute="position" to="0 1.5 0" direction="alternate" dur="1000" repeat="indefinite"></a-animation>
+        </a-box>
       </a-entity>
     </a-marker>
     <a-entity camera></a-entity>
   </a-scene>
+
+  <script>
+    // Function to keep the cube visible when the marker is lost
+    let marker = document.querySelector('#hiroMarker');
+    let cubeContainer = document.querySelector('#cubeContainer');
+
+    marker.addEventListener('markerFound', () => {
+      cubeContainer.setAttribute('visible', 'true');
+    });
+
+    marker.addEventListener('markerLost', () => {
+      cubeContainer.setAttribute('visible', 'true');
+    });
+  </script>
 </body>
 </html>
