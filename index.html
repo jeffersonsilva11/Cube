@@ -22,7 +22,7 @@
     <a-marker preset="hiro">
       <a-entity position="0 0 0">
         <a-entity id="customModel" gltf-model="url(scene.gltf)" scale="0.2 0.2 0.2" position="0 0.5 0" rotation="0 0 0"
-                  animation-mixer gesture-handler>
+                  animation-mixer="clip: Animation" gesture-handler>
           <!-- Animação de aparecimento -->
           <a-animation attribute="position" from="0 -1 0" to="0 0.5 0" dur="1000" easing="ease-out" begin="markerFound"></a-animation>
         </a-entity>
@@ -76,33 +76,7 @@
       model.emit('appearAnimationEnd');
     });
 
-    // Ensure animation mixer component is initialized correctly
-    AFRAME.registerComponent('animation-mixer', {
-      schema: {type: 'string'},
-
-      init: function () {
-        const model = this.el.getObject3D('mesh');
-        if (!model) {
-          this.el.addEventListener('model-loaded', () => this.init());
-          return;
-        }
-        this.mixer = new THREE.AnimationMixer(model);
-        this.el.sceneEl.systems['animation'].addMixer(this.mixer);
-        this.actions = {};
-
-        if (model.animations) {
-          model.animations.forEach((clip) => {
-            const action = this.mixer.clipAction(clip);
-            this.actions[clip.name] = action;
-            action.play();
-          });
-        }
-      },
-
-      tick: function (time, deltaTime) {
-        if (this.mixer) this.mixer.update(deltaTime / 1000);
-      }
-    });
+    // AFRAME animation-mixer component already handles clip
   </script>
 </body>
 </html>
