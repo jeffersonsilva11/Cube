@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     model.setAttribute('visible', 'true');
 
     // Ajuste inicial para centralizar o modelo e voltá-lo para a frente
-    model.setAttribute('position', '0 0 -3');
+    model.setAttribute('position', '0 -0.5 -3');
     model.setAttribute('rotation', '0 0 0');
 
     // Interação para rotacionar o modelo
@@ -44,24 +44,4 @@ document.addEventListener('DOMContentLoaded', () => {
     scene.addEventListener('touchstart', onDocumentMouseDown);
     scene.addEventListener('touchmove', onDocumentMouseMove);
     scene.addEventListener('touchend', onDocumentMouseUp);
-
-    // Adicionando o reconhecimento de toque para posicionar o modelo
-    scene.addEventListener('click', function (event) {
-        const touch = event.touches ? event.touches[0] : event;
-        const mouse = new THREE.Vector2();
-        mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
-
-        const raycaster = new THREE.Raycaster();
-        raycaster.setFromCamera(mouse, scene.camera);
-
-        const intersects = raycaster.intersectObjects(scene.object3D.children, true);
-        if (intersects.length > 0) {
-            const intersect = intersects[0];
-            const position = intersect.point;
-
-            model.object3D.position.copy(position);
-            model.setAttribute('visible', 'true');
-        }
-    });
 });
