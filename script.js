@@ -36,7 +36,7 @@ AFRAME.registerComponent('animation-handler', {
                 const camera = document.querySelector('[camera]');
                 const worldPos = new THREE.Vector3();
                 camera.object3D.getWorldPosition(worldPos);
-                const clickPosition = worldPos;
+                const clickPosition = new THREE.Vector3(evt.detail.intersection.point.x, 0, evt.detail.intersection.point.z);
 
                 el.object3D.position.copy(clickPosition);
                 el.setAttribute('visible', 'true');
