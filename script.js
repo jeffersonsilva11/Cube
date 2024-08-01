@@ -14,11 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
   
       raycaster.setFromCamera(mouse, camera.getObject3D('camera'));
   
-      const intersects = raycaster.intersectObject(scene.object3D, true);
+      const intersects = raycaster.intersectObjects(scene.object3D.children, true);
   
       if (intersects.length > 0) {
         const intersect = intersects[0];
         const position = intersect.point;
+  
+        // Ajuste de posição para colocar o modelo de pé na superfície
+        position.y += 0.25; // Ajuste conforme necessário para alinhar com os pés do modelo
   
         model.setAttribute('position', position);
         model.setAttribute('visible', 'true');
@@ -65,4 +68,5 @@ document.addEventListener('DOMContentLoaded', () => {
     scene.addEventListener('touchstart', onDocumentMouseDown);
     scene.addEventListener('touchmove', onDocumentMouseMove);
     scene.addEventListener('touchend', onDocumentMouseUp);
-  });  
+  });
+  
