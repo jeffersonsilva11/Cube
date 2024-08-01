@@ -12,7 +12,7 @@
   <a-scene embedded arjs="sourceType: webcam;">
     <!-- Custom marker -->
     <a-marker type="pattern" url="logo.patt" id="customMarker">
-      <a-entity id="logo3D" rotation="0 0 0" position="0 0 0" scale="0.5 0.5 0.5" gltf-model="url(logo.gltf)">
+      <a-entity id="logo3D" position="0 1 0" scale="0.5 0.5 0.5" gltf-model="url(logo.gltf)" rotation="0 0 0">
         <a-animation attribute="rotation" to="0 360 0" dur="5000" easing="linear" repeat="indefinite"></a-animation>
       </a-entity>
     </a-marker>
