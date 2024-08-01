@@ -11,9 +11,9 @@
       <a-marker preset="hiro">
         <!-- Cubo com animações e transparência -->
         <a-box position="0 0 0" rotation="0 0 0" color="#4CC3D9" opacity="0.6"
-               animation__position="property: position; to: 0 0.5 0; dur: 2000; easing: easeInOutQuad"
-               animation__rotation="property: rotation; to: 0 360 0; dur: 2000; easing: easeInOutQuad"
-               animation__scale="property: scale; from: 0 0 0; to: 1 1 1; dur: 2000; easing: easeInOutQuad">
+               animation="property: position; to: 0 0.5 0; dur: 2000; easing: easeInOutQuad; startEvents: markerFound"
+               animation__rotation="property: rotation; to: 0 360 0; dur: 2000; easing: easeInOutQuad; startEvents: markerFound"
+               animation__scale="property: scale; from: 0 0 0; to: 1 1 1; dur: 2000; easing: easeInOutQuad; startEvents: markerFound">
         </a-box>
       </a-marker>
       <a-entity camera></a-entity>
