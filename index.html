@@ -12,7 +12,7 @@
   <a-scene embedded arjs="sourceType: webcam;">
     <a-marker preset="hiro" id="hiroMarker">
       <a-entity id="cubeContainer">
-        <a-box id="animatedCube" position="0 0.5 0" depth="0.5" height="0.5" width="0.5" color="blue">
+        <a-box position="0 0.5 0" depth="0.5" height="0.5" width="0.5" color="blue">
           <a-animation attribute="position" to="0 1.5 0" direction="alternate" dur="1000" repeat="indefinite"></a-animation>
         </a-box>
       </a-entity>
@@ -21,38 +21,17 @@
   </a-scene>
 
   <script>
+    // Function to keep the cube visible when the marker is lost
     let marker = document.querySelector('#hiroMarker');
     let cubeContainer = document.querySelector('#cubeContainer');
-    let cube = document.querySelector('#animatedCube');
-
-    let lastPosition = null;
-    let lastRotation = null;
 
     marker.addEventListener('markerFound', () => {
       cubeContainer.setAttribute('visible', 'true');
-      lastPosition = marker.object3D.position.clone();
-      lastRotation = marker.object3D.rotation.clone();
     });
 
     marker.addEventListener('markerLost', () => {
       cubeContainer.setAttribute('visible', 'true');
-      if (lastPosition && lastRotation) {
-        cubeContainer.object3D.position.copy(lastPosition);
-        cubeContainer.object3D.rotation.copy(lastRotation);
-      }
     });
-
-    // Continuously update the position of the cubeContainer to make it follow the last known position
-    AFRAME.registerComponent('track-marker', {
-      tick: function () {
-        if (lastPosition && lastRotation) {
-          cubeContainer.object3D.position.copy(lastPosition);
-          cubeContainer.object3D.rotation.copy(lastRotation);
-        }
-      }
-    });
-
-    cubeContainer.setAttribute('track-marker', '');
   </script>
 </body>
 </html>
