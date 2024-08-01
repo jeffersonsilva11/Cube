@@ -78,16 +78,25 @@
       model.addEventListener('model-loaded', () => {
         let model3D = model.getObject3D('mesh');
         if (model3D) {
+          let mixer = new THREE.AnimationMixer(model3D);
           model3D.animations.forEach((clip) => {
             if (clip.name === "walk") {
-              let mixer = new THREE.AnimationMixer(model3D);
               mixer.clipAction(clip).play();
-              model.setAttribute('animation-mixer', {clip: 'walk'});
             }
           });
+          model.setObject3D('mixer', mixer);
         }
       });
     });
+
+    AFRAME.registerComponent('tick-handler', {
+      tick: function (time, timeDelta) {
+        let mixer = model.getObject3D('mixer');
+        if (mixer) mixer.update(timeDelta / 1000);
+      }
+    });
+
+    model.setAttribute('tick-handler', '');
   </script>
 </body>
 </html>
