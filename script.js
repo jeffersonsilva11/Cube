@@ -1,5 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const model = document.getElementById('animated-model');
+    model.setAttribute('visible', 'true');
+
+    // Ajuste inicial para centralizar o modelo e voltá-lo para a frente
+    model.setAttribute('position', '0 -0.5 -3');
+    model.setAttribute('rotation', '0 0 0');
 
     // Interação para rotacionar o modelo
     let isUserInteracting = false,
@@ -43,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Adicionar evento de clique para posicionar o modelo na superfície detectada
     scene.addEventListener('click', (event) => {
         const touch = event.touches ? event.touches[0] : event;
-        const touchX = (touch.clientX / window.innerWidth) * 2 - 1;
+        const touchX = touch.clientX / window.innerWidth * 2 - 1;
         const touchY = -(touch.clientY / window.innerHeight) * 2 + 1;
 
         const camera = document.querySelector('[camera]');
@@ -56,9 +61,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (intersects.length > 0) {
             const intersect = intersects[0];
-            model.object3D.position.copy(intersect.point);
             model.setAttribute('position', intersect.point);
-            model.setAttribute('visible', 'true');
+            model.object3D.position.copy(intersect.point);
         }
     });
 });
