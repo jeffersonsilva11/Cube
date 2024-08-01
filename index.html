@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>AR Sphere</title>
+  <title>AR Cube</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.7.7/aframe/build/aframe-ar.js"></script>
   <style>
@@ -11,10 +11,10 @@
 <body>
   <a-scene embedded arjs="sourceType: webcam;">
     <a-marker preset="hiro" id="hiroMarker">
-      <a-entity id="sphereContainer">
-        <a-sphere id="animatedSphere" position="0 0.5 0" radius="0.25" color="red">
+      <a-entity id="cubeContainer">
+        <a-box id="animatedCube" position="0 0.5 0" depth="0.5" height="0.5" width="0.5" color="blue">
           <a-animation attribute="position" to="0 1.5 0" direction="alternate" dur="1000" repeat="indefinite"></a-animation>
-        </a-sphere>
+        </a-box>
       </a-entity>
     </a-marker>
     <a-entity camera></a-entity>
@@ -22,37 +22,37 @@
 
   <script>
     let marker = document.querySelector('#hiroMarker');
-    let sphereContainer = document.querySelector('#sphereContainer');
-    let sphere = document.querySelector('#animatedSphere');
+    let cubeContainer = document.querySelector('#cubeContainer');
+    let cube = document.querySelector('#animatedCube');
 
     let lastPosition = null;
     let lastRotation = null;
 
     marker.addEventListener('markerFound', () => {
-      sphereContainer.setAttribute('visible', 'true');
+      cubeContainer.setAttribute('visible', 'true');
       lastPosition = marker.object3D.position.clone();
       lastRotation = marker.object3D.rotation.clone();
     });
 
     marker.addEventListener('markerLost', () => {
-      sphereContainer.setAttribute('visible', 'true');
+      cubeContainer.setAttribute('visible', 'true');
       if (lastPosition && lastRotation) {
-        sphereContainer.object3D.position.copy(lastPosition);
-        sphereContainer.object3D.rotation.copy(lastRotation);
+        cubeContainer.object3D.position.copy(lastPosition);
+        cubeContainer.object3D.rotation.copy(lastRotation);
       }
     });
 
-    // Continuously update the position of the sphereContainer to make it follow the last known position
+    // Continuously update the position of the cubeContainer to make it follow the last known position
     AFRAME.registerComponent('track-marker', {
       tick: function () {
         if (lastPosition && lastRotation) {
-          sphereContainer.object3D.position.copy(lastPosition);
-          sphereContainer.object3D.rotation.copy(lastRotation);
+          cubeContainer.object3D.position.copy(lastPosition);
+          cubeContainer.object3D.rotation.copy(lastRotation);
         }
       }
     });
 
-    sphereContainer.setAttribute('track-marker', '');
+    cubeContainer.setAttribute('track-marker', '');
   </script>
 </body>
 </html>
