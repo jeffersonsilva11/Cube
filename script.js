@@ -3,23 +3,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const model = document.getElementById('animated-model');
     const camera = document.querySelector('[camera]');
   
-    scene.addEventListener('click', (event) => {
-      const touch = event.touches ? event.touches[0] : event;
-      const touchPoint = new THREE.Vector2(
-        (touch.clientX / window.innerWidth) * 2 - 1,
-        -(touch.clientY / window.innerHeight) * 2 + 1
-      );
+    // Inicializa o Raycaster
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
   
-      const raycaster = new THREE.Raycaster();
-      raycaster.setFromCamera(touchPoint, camera.getObject3D('camera'));
+    // Função para lidar com cliques na tela
+    function onClick(event) {
+      event.preventDefault();
   
-      const intersects = raycaster.intersectObject(scene.object3D, true);
+      // Calcula as coordenadas do clique
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  
+      // Define o raycaster a partir da câmera e da posição do clique
+      raycaster.setFromCamera(mouse, camera.getObject3D('camera'));
+  
+      // Verifica as interseções
+      const intersects = raycaster.intersectObjects(scene.object3D.children, true);
   
       if (intersects.length > 0) {
         const intersect = intersects[0];
         const position = intersect.point;
-        model.setAttribute('position', `${position.x} ${position.y} ${position.z}`);
+  
+        // Define a posição e torna o modelo visível
+        model.setAttribute('position', position);
         model.setAttribute('visible', 'true');
       }
-    });
+    }
+  
+    // Adiciona o evento de clique
+    window.addEventListener('click', onClick);
   });  
