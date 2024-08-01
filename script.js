@@ -3,15 +3,14 @@ document.addEventListener('DOMContentLoaded', () => {
     model.setAttribute('visible', 'true');
 
     // Ajuste inicial para centralizar o modelo e voltá-lo para a frente
-    model.setAttribute('position', '0 0 -3');
+    model.setAttribute('position', '0 -0.5 -3');
     model.setAttribute('rotation', '0 0 0');
 
-    // Interação para rotacionar e mover o modelo
+    // Interação para rotacionar o modelo
     let isUserInteracting = false,
         onPointerDownPointerX = 0, onPointerDownPointerY = 0,
         lon = 0, onPointerDownLon = 0,
-        lat = 0, onPointerDownLat = 0,
-        initialPosition = { x: 0, y: 0, z: -3 };
+        lat = 0, onPointerDownLat = 0;
 
     function onDocumentMouseDown(event) {
         event.preventDefault();
@@ -31,11 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
             lon = (onPointerDownPointerX - clientX) * 0.1 + onPointerDownLon;
             lat = (clientY - onPointerDownPointerY) * 0.1 + onPointerDownLat;
             model.object3D.rotation.y = THREE.Math.degToRad(lon);
-
-            // Atualiza a posição do modelo com base no movimento do toque
-            const deltaX = (clientX - onPointerDownPointerX) * 0.01;
-            const deltaY = -(clientY - onPointerDownPointerY) * 0.01;
-            model.object3D.position.set(initialPosition.x + deltaX, initialPosition.y + deltaY, initialPosition.z);
         }
     }
 
