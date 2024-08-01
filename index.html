@@ -5,8 +5,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.rawgit.com/artoolkit/jsartoolkit5/master/build/artoolkit.min.js"></script>
   <script src="https://cdn.rawgit.com/artoolkit/jsartoolkit5/master/build/artoolkit.api.js"></script>
-  <script src="https://cdn.rawgit.com/kalwalt/jsartoolkitNFT/master/examples/jsartoolkitNFT.min.js"></script>
-  <script src="https://cdn.rawgit.com/kalwalt/jsartoolkitNFT/master/examples/artoolkit.api.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/three.js/build/ar-nft.js"></script>
   <style>
     body { margin: 0; overflow: hidden; }
     canvas { display: block; }
@@ -46,7 +45,7 @@
 
       // AR Toolkit Context
       let arToolkitContext = new THREEx.ArToolkitContext({
-        cameraParametersUrl: THREEx.ArToolkitContext.baseURL + 'data/camera_para.dat',
+        cameraParametersUrl: 'https://cdn.rawgit.com/artoolkit/jsartoolkit5/master/data/data/camera_para.dat',
         detectionMode: 'mono'
       });
 
@@ -60,7 +59,7 @@
 
       let arMarkerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
         type: 'pattern',
-        patternUrl: THREEx.ArToolkitContext.baseURL + 'data/patt.hiro',
+        patternUrl: 'https://cdn.rawgit.com/artoolkit/jsartoolkit5/master/data/data/patt.hiro'
       });
 
       // Cube
