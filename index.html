@@ -3,9 +3,10 @@
 <head>
   <title>AR Cube</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://rawcdn.githack.com/artoolkitx/jsartoolkit5/5.3.2/jsartoolkit5/artoolkit.min.js"></script>
-  <script src="https://rawcdn.githack.com/artoolkitx/jsartoolkit5/5.3.2/jsartoolkit5/artoolkit.api.js"></script>
-  <script src="https://rawcdn.githack.com/webarkit/ARnft/1.0.0/dist/arnft.min.js"></script>
+  <script src="https://cdn.rawgit.com/artoolkit/jsartoolkit5/master/build/artoolkit.min.js"></script>
+  <script src="https://cdn.rawgit.com/artoolkit/jsartoolkit5/master/build/artoolkit.api.js"></script>
+  <script src="https://cdn.rawgit.com/kalwalt/jsartoolkitNFT/master/examples/jsartoolkitNFT.min.js"></script>
+  <script src="https://cdn.rawgit.com/kalwalt/jsartoolkitNFT/master/examples/artoolkit.api.js"></script>
   <style>
     body { margin: 0; overflow: hidden; }
     canvas { display: block; }
@@ -32,7 +33,7 @@
       renderer.setClearColor(new THREE.Color('lightgrey'), 0);
       document.body.appendChild(renderer.domElement);
 
-      // AR Toolkit Context
+      // AR Toolkit Source
       let arToolkitSource = new THREEx.ArToolkitSource({ sourceType: 'webcam' });
 
       arToolkitSource.init(() => {
@@ -43,6 +44,7 @@
 
       window.addEventListener('resize', () => onResize());
 
+      // AR Toolkit Context
       let arToolkitContext = new THREEx.ArToolkitContext({
         cameraParametersUrl: THREEx.ArToolkitContext.baseURL + 'data/camera_para.dat',
         detectionMode: 'mono'
@@ -52,7 +54,7 @@
         camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
       });
 
-      // Marker
+      // Marker Root
       markerRoot = new THREE.Group();
       scene.add(markerRoot);
 
