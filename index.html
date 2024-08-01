@@ -10,20 +10,35 @@
 </head>
 <body>
   <a-scene embedded arjs="sourceType: webcam;">
-    <a-marker preset="hiro" emitevent="true">
-      <a-box position='0 0 0' material='color: blue; opacity: 0.6;'
-             animation__position="property: position; to: 0 0.5 0; dur: 2000; easing: easeOutQuad; startEvents: markerFound;"
-             animation__rotation="property: rotation; to: 0 360 0; dur: 2000; easing: linear; loop: true; startEvents: markerFound;">
+    <a-entity id="cubeContainer">
+      <a-box id="cube" position="0 0 0" material="color: blue; opacity: 0.6;">
+        <a-animation attribute="position" to="0 0.5 0" dur="2000" easing="easeOutQuad"></a-animation>
+        <a-animation attribute="rotation" to="0 360 0" dur="2000" easing="linear" repeat="indefinite"></a-animation>
       </a-box>
-    </a-marker>
+    </a-entity>
+    <a-marker preset="hiro" id="hiroMarker" emitevent="true"></a-marker>
     <a-entity camera></a-entity>
   </a-scene>
-  
+
   <script>
-    document.querySelector('a-marker').addEventListener('markerFound', () => {
-      const box = document.querySelector('a-box');
-      box.setAttribute('animation__position', 'property: position; to: 0 0.5 0; dur: 2000; easing: easeOutQuad;');
-      box.setAttribute('animation__rotation', 'property: rotation; to: 0 360 0; dur: 2000; easing: linear; loop: true;');
+    const cubeContainer = document.getElementById('cubeContainer');
+    const hiroMarker = document.getElementById('hiroMarker');
+    const cube = document.getElementById('cube');
+
+    hiroMarker.addEventListener('markerFound', () => {
+      // Update the position and visibility of the cube container to match the marker
+      const markerPosition = hiroMarker.object3D.position;
+      const markerRotation = hiroMarker.object3D.rotation;
+
+      cubeContainer.object3D.position.set(markerPosition.x, markerPosition.y, markerPosition.z);
+      cubeContainer.object3D.rotation.set(markerRotation.x, markerRotation.y, markerRotation.z);
+
+      cubeContainer.setAttribute('visible', 'true');
+    });
+
+    hiroMarker.addEventListener('markerLost', () => {
+      // Keep the cube container visible and fixed in its last known position
+      cubeContainer.setAttribute('visible', 'true');
     });
   </script>
 </body>
