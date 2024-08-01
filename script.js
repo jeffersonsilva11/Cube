@@ -13,11 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const raycaster = new THREE.Raycaster();
       raycaster.setFromCamera(touchPoint, camera.getObject3D('camera'));
   
-      const intersects = raycaster.intersectObject(scene.object3D, true);
+      const intersects = raycaster.intersectObjects(scene.object3D.children, true);
   
       if (intersects.length > 0) {
         const intersect = intersects[0];
-        model.setAttribute('position', intersect.point);
+        const position = intersect.point;
+        model.setAttribute('position', `${position.x} ${position.y} ${position.z}`);
         model.setAttribute('visible', 'true');
       }
     });
