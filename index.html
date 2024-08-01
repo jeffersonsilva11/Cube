@@ -11,6 +11,11 @@
 </head>
 <body>
   <a-scene embedded arjs="sourceType: webcam;">
+    <!-- Iluminação -->
+    <a-light type="ambient" color="#ffffff"></a-light>
+    <a-light type="directional" intensity="1" position="1 1 1"></a-light>
+    <a-light type="directional" intensity="0.5" position="-1 -1 1"></a-light>
+    
     <!-- Custom marker -->
     <a-marker preset="hiro">
       <a-entity position="0 0 0">
@@ -70,6 +75,18 @@
 
     marker.addEventListener('markerFound', () => {
       model.emit('appearAnimationEnd');
+      model.addEventListener('model-loaded', () => {
+        let model3D = model.getObject3D('mesh');
+        if (model3D) {
+          model3D.animations.forEach((clip) => {
+            if (clip.name === "walk") {
+              let mixer = new THREE.AnimationMixer(model3D);
+              mixer.clipAction(clip).play();
+              model.setAttribute('animation-mixer', {clip: 'walk'});
+            }
+          });
+        }
+      });
     });
   </script>
 </body>
