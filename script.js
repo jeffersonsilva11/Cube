@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const raycaster = new THREE.Raycaster();
       raycaster.setFromCamera(touchPoint, camera.getObject3D('camera'));
   
-      const intersects = raycaster.intersectObjects(scene.object3D.children, true);
+      const intersects = raycaster.intersectObject(scene.object3D, true);
   
       if (intersects.length > 0) {
         const intersect = intersects[0];
