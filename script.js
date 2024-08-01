@@ -1,38 +1,24 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const sceneEl = document.querySelector("a-scene");
-    
-    // GLTF Loader
-    const loader = new THREE.GLTFLoader();
+document.addEventListener('DOMContentLoaded', () => {
+    const scene = document.querySelector('a-scene');
+    const model = document.getElementById('animated-model');
+    const camera = document.querySelector('[camera]');
   
-    // Load the GLB model
-    loader.load('spongebob.glb', function (gltf) {
-      const model = gltf.scene;
-      
-      // Function to place the model on tap
-      const placeModel = (position) => {
-        const modelEl = document.createElement('a-entity');
-        modelEl.setObject3D('mesh', model.clone());
-        modelEl.setAttribute('position', position); // Use the provided position
-        modelEl.setAttribute('scale', { x: 0.5, y: 0.5, z: 0.5 }); // Adjust scale as needed
-        sceneEl.appendChild(modelEl);
-      };
+    scene.addEventListener('click', (event) => {
+      const touch = event.touches ? event.touches[0] : event;
+      const touchPoint = new THREE.Vector2(
+        (touch.clientX / window.innerWidth) * 2 - 1,
+        -(touch.clientY / window.innerHeight) * 2 + 1
+      );
   
-      // Listen for screen taps
-      sceneEl.addEventListener('click', (event) => {
-        const touch = event.touches ? event.touches[0] : event;
-        const rect = sceneEl.getBoundingClientRect();
-        const x = ((touch.clientX - rect.left) / rect.width) * 2 - 1;
-        const y = -((touch.clientY - rect.top) / rect.height) * 2 + 1;
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(touchPoint, camera.getObject3D('camera'));
   
-        // Calculate position for model placement
-        const position = {
-          x: x * 10, // Adjust multiplier as needed for positioning
-          y: y * 10,
-          z: -2
-        };
+      const intersects = raycaster.intersectObject(scene.object3D, true);
   
-        placeModel(position);
-      });
+      if (intersects.length > 0) {
+        const intersect = intersects[0];
+        model.setAttribute('position', intersect.point);
+        model.setAttribute('visible', 'true');
+      }
     });
-  });
-  
+  });  
