@@ -4,6 +4,7 @@
   <title>AR Custom Model</title>
   <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe-ar.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/ngokevin/aframe-extras/dist/aframe-extras.min.js"></script>
   <style>
     body { margin: 0; overflow: hidden; }
   </style>
@@ -13,12 +14,13 @@
     <!-- Custom marker -->
     <a-marker preset="hiro">
       <a-entity position="0 0 0">
-        <a-entity id="animatedModel" gltf-model="url(scene.gltf)" scale="0.5 0.5 0.5" position="0 -1 0">
+        <a-entity id="animatedModel" gltf-model="url(scene.gltf)" scale="2 2 2" position="0 1 0" rotation="0 0 0" 
+                  gesture-handler>
           <!-- Animação de aparecimento -->
-          <a-animation attribute="position" from="0 -1 0" to="0 0.5 0" dur="1000" easing="ease-out" begin="markerFound"></a-animation>
+          <a-animation attribute="position" from="0 -1 0" to="0 1 0" dur="1000" easing="ease-out" begin="markerFound"></a-animation>
           <!-- Animação de flutuação e rotação -->
-          <a-animation attribute="position" from="0 0.5 0" to="0 1.5 0" direction="alternate" dur="2000" easing="ease-in-out" repeat="indefinite" begin="appearAnimationEnd"></a-animation>
-          <a-animation attribute="rotation" to="0 360 0" dur="2000" easing="linear" repeat="indefinite" begin="appearAnimationEnd"></a-animation>
+          <a-animation attribute="position" from="0 1 0" to="0 1.5 0" direction="alternate" dur="2000" easing="ease-in-out" repeat="indefinite" begin="appearAnimationEnd"></a-animation>
+          <a-animation attribute="rotation" to="0 360 0" dur="5000" easing="linear" repeat="indefinite" begin="appearAnimationEnd"></a-animation>
         </a-entity>
       </a-entity>
     </a-marker>
@@ -26,6 +28,43 @@
   </a-scene>
 
   <script>
+    AFRAME.registerComponent('gesture-handler', {
+      schema: {
+        enabled: {default: true}
+      },
+
+      init: function () {
+        this.handleGesture = this.handleGesture.bind(this);
+        this.el.sceneEl.addEventListener('touchstart', this.handleGesture);
+        this.el.sceneEl.addEventListener('touchmove', this.handleGesture);
+      },
+
+      remove: function () {
+        this.el.sceneEl.removeEventListener('touchstart', this.handleGesture);
+        this.el.sceneEl.removeEventListener('touchmove', this.handleGesture);
+      },
+
+      handleGesture: function (event) {
+        if (!this.data.enabled) { return; }
+
+        const touch = event.touches[0];
+        const model = this.el;
+        if (event.type === 'touchstart') {
+          this.initialX = touch.pageX;
+          this.initialY = touch.pageY;
+          this.initialRotation = model.getAttribute('rotation');
+        } else if (event.type === 'touchmove') {
+          const deltaX = touch.pageX - this.initialX;
+          const deltaY = touch.pageY - this.initialY;
+          model.setAttribute('rotation', {
+            x: this.initialRotation.x - deltaY * 0.5,
+            y: this.initialRotation.y + deltaX * 0.5,
+            z: this.initialRotation.z
+          });
+        }
+      }
+    });
+
     let marker = document.querySelector('a-marker');
     let model = document.getElementById('animatedModel');
 
