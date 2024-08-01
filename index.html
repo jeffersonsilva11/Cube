@@ -76,7 +76,37 @@
       model.emit('appearAnimationEnd');
     });
 
-    // AFRAME animation-mixer component already handles clip
+    // AFRAME animation-mixer component with logs for debugging
+    AFRAME.registerComponent('animation-mixer', {
+      schema: {type: 'string'},
+
+      init: function () {
+        const model = this.el.getObject3D('mesh');
+        if (!model) {
+          this.el.addEventListener('model-loaded', () => this.init());
+          return;
+        }
+        this.mixer = new THREE.AnimationMixer(model);
+        this.el.sceneEl.systems['animation'].addMixer(this.mixer);
+        this.actions = {};
+
+        if (model.animations) {
+          console.log('Animations found:', model.animations);
+          model.animations.forEach((clip) => {
+            const action = this.mixer.clipAction(clip);
+            this.actions[clip.name] = action;
+            console.log('Playing animation:', clip.name);
+            action.play();
+          });
+        } else {
+          console.log('No animations found in the model.');
+        }
+      },
+
+      tick: function (time, deltaTime) {
+        if (this.mixer) this.mixer.update(deltaTime / 1000);
+      }
+    });
   </script>
 </body>
 </html>
