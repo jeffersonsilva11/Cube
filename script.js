@@ -4,8 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Ajuste inicial para centralizar o modelo e voltá-lo para a frente
     model.setAttribute('position', '0 0 -3');
-    model.setAttribute('rotation', '0 180 0');
-    model.setAttribute('animation-mixer', 'clip: Breathing Idle');
+    model.setAttribute('rotation', '0 0 0');
 
     // Interação para rotacionar o modelo
     let isUserInteracting = false,
