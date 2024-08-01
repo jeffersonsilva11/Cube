@@ -1,28 +1,22 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>AR Model</title>
-  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
-  <script src="script.js" defer></script>
-  <style>
-    body { margin: 0; overflow: hidden; }
-    a-scene { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-  </style>
-</head>
-<body>
-  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-    <a-marker preset="hiro">
-      <a-entity id="animated-model" gltf-model="url(spongebob.glb)" visible="false" animation-mixer="clip: Breathing Idle; loop: repeat;">
-        <!-- Luzes -->
-        <a-entity light="type: ambient; intensity: 1"></a-entity>
-        <a-entity light="type: directional; color: #ffffff; intensity: 2" position="1 1 0"></a-entity>
-        <a-entity light="type: directional; color: #ffffff; intensity: 2" position="-1 1 0"></a-entity>
-        <a-entity light="type: point; color: #ffffff; intensity: 2" position="0 2 2"></a-entity>
-        <a-entity light="type: point; color: #ffffff; intensity: 2" position="0 -2 2"></a-entity>
-      </a-entity>
-    </a-marker>
-    <a-entity camera></a-entity>
-  </a-scene>
-</body>
+  <head>
+    <title>AR.js Animation Example</title>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.min.js"></script>
+  </head>
+  <body style="margin: 0; overflow: hidden;">
+    <a-scene embedded arjs="sourceType: webcam;">
+      <!-- Marcador Hiro -->
+      <a-marker preset="hiro">
+        <!-- Cubo com animações -->
+        <a-box position="0 0.5 0" rotation="0 45 45" color="#4CC3D9" 
+               animation="property: position; to: 0 1 0; dur: 2000; easing: easeInOutQuad"
+               animation__rotate="property: rotation; to: 0 405 45; dur: 2000; easing: easeInOutQuad"
+               animation__scale="property: scale; to: 1.5 1.5 1.5; dur: 2000; easing: easeInOutQuad; startEvents: markerFound">
+        </a-box>
+      </a-marker>
+      <a-entity camera></a-entity>
+    </a-scene>
+  </body>
 </html>
