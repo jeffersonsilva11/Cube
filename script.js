@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Interação para arrastar o modelo
     let isUserInteracting = false,
         onPointerDownPointerX = 0, onPointerDownPointerY = 0,
-        modelPosX = 0, modelPosY = 1, modelPosZ = -3;
+        modelPosX = 0, modelPosY = 0, modelPosZ = -3;
 
     function onDocumentMouseDown(event) {
         event.preventDefault();
