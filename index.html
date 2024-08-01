@@ -12,7 +12,9 @@
 </head>
 <body>
   <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-    <a-entity id="animated-model" gltf-model="url(spongebob.glb)" scale="1 1 1" visible="false" animation-mixer="clip: Breathing Idle; loop: repeat;"></a-entity>
+    <a-marker type="pattern" url="path/to/hero.patt" id="hero-marker">
+      <a-entity id="animated-model" gltf-model="url(spongebob.glb)" scale="1 1 1" visible="false" animation-mixer="clip: Breathing Idle; loop: repeat;"></a-entity>
+    </a-marker>
     <a-entity camera></a-entity>
   </a-scene>
 </body>
