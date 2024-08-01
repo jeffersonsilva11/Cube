@@ -8,12 +8,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function onTouch(event) {
       event.preventDefault();
   
-      const touch = event.touches[0];
+      const touch = event.touches ? event.touches[0] : event;
       mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
   
       raycaster.setFromCamera(mouse, camera.getObject3D('camera'));
-      const intersects = raycaster.intersectObjects(scene.object3D.children, true);
+  
+      const intersects = raycaster.intersectObject(scene.object3D, true);
   
       if (intersects.length > 0) {
         const intersect = intersects[0];
