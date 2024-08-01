@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const model = document.getElementById('animated-model');
 
     // Ajuste inicial para centralizar o modelo
-    model.setAttribute('position', '0 1 -5');
+    model.setAttribute('position', '0 1 -3');
     model.setAttribute('visible', 'true');
 
     // Interação para rotacionar o modelo
@@ -37,6 +37,17 @@ document.addEventListener('DOMContentLoaded', () => {
         isUserInteracting = false;
     }
 
+    function onDocumentMouseWheel(event) {
+        event.preventDefault();
+        model.object3D.scale.x += event.deltaY * -0.01;
+        model.object3D.scale.y += event.deltaY * -0.01;
+        model.object3D.scale.z += event.deltaY * -0.01;
+
+        model.object3D.scale.x = Math.max(0.1, model.object3D.scale.x);
+        model.object3D.scale.y = Math.max(0.1, model.object3D.scale.y);
+        model.object3D.scale.z = Math.max(0.1, model.object3D.scale.z);
+    }
+
     const scene = document.querySelector('a-scene');
     scene.addEventListener('mousedown', onDocumentMouseDown);
     scene.addEventListener('mousemove', onDocumentMouseMove);
@@ -44,4 +55,5 @@ document.addEventListener('DOMContentLoaded', () => {
     scene.addEventListener('touchstart', onDocumentMouseDown);
     scene.addEventListener('touchmove', onDocumentMouseMove);
     scene.addEventListener('touchend', onDocumentMouseUp);
+    scene.addEventListener('wheel', onDocumentMouseWheel);
 });
