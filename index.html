@@ -12,7 +12,7 @@
   <a-scene embedded arjs="sourceType: webcam;">
     <a-marker preset="hiro" id="hiroMarker">
       <a-entity id="sphereContainer">
-        <a-sphere id="animatedSphere" position="0 0.5 0" radius="0.25" color="red">
+        <a-sphere position="0 0.5 0" radius="0.25" color="red">
           <a-animation attribute="position" to="0 1.5 0" direction="alternate" dur="1000" repeat="indefinite"></a-animation>
         </a-sphere>
       </a-entity>
@@ -21,23 +21,16 @@
   </a-scene>
 
   <script>
+    // Function to keep the sphere visible when the marker is lost
     let marker = document.querySelector('#hiroMarker');
     let sphereContainer = document.querySelector('#sphereContainer');
-    let lastPosition = null;
-    let lastRotation = null;
 
     marker.addEventListener('markerFound', () => {
       sphereContainer.setAttribute('visible', 'true');
-      lastPosition = marker.object3D.position.clone();
-      lastRotation = marker.object3D.rotation.clone();
     });
 
     marker.addEventListener('markerLost', () => {
       sphereContainer.setAttribute('visible', 'true');
-      if (lastPosition && lastRotation) {
-        sphereContainer.object3D.position.copy(lastPosition);
-        sphereContainer.object3D.rotation.copy(lastRotation);
-      }
     });
   </script>
 </body>
