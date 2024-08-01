@@ -2,67 +2,108 @@
 <html>
 <head>
   <title>AR Cube</title>
-  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe-ar.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://rawcdn.githack.com/artoolkitx/jsartoolkit5/5.3.2/jsartoolkit5/artoolkit.min.js"></script>
+  <script src="https://rawcdn.githack.com/artoolkitx/jsartoolkit5/5.3.2/jsartoolkit5/artoolkit.api.js"></script>
+  <script src="https://rawcdn.githack.com/webarkit/ARnft/1.0.0/dist/arnft.min.js"></script>
   <style>
     body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
   </style>
 </head>
 <body>
-  <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-    <a-marker preset="hiro" id="hiroMarker" emitevent="true">
-      <a-box id="animatedCube" position="0 0 0" material="color: blue; opacity: 0.6;" visible="false">
-        <a-animation attribute="position" to="0 0.5 0" dur="2000" easing="easeOutQuad"></a-animation>
-        <a-animation attribute="rotation" to="0 360 0" dur="2000" easing="linear" repeat="indefinite"></a-animation>
-      </a-box>
-    </a-marker>
-    <a-entity id="cubeContainer" visible="false">
-      <a-box position="0 0 0" material="color: blue; opacity: 0.6;"></a-box>
-    </a-entity>
-    <a-entity camera></a-entity>
-  </a-scene>
-
   <script>
-    const hiroMarker = document.getElementById('hiroMarker');
-    const animatedCube = document.getElementById('animatedCube');
-    const cubeContainer = document.getElementById('cubeContainer');
+    let scene, camera, renderer, markerRoot, cube, controls;
 
-    let anchorCreated = false;
-    let lastPosition = null;
-    let lastRotation = null;
+    init();
+    animate();
 
-    hiroMarker.addEventListener('markerFound', () => {
-      if (!anchorCreated) {
-        const markerPosition = hiroMarker.object3D.position;
-        const markerRotation = hiroMarker.object3D.rotation;
+    function init() {
+      // Scene
+      scene = new THREE.Scene();
 
-        lastPosition = markerPosition.clone();
-        lastRotation = markerRotation.clone();
+      // Camera
+      camera = new THREE.Camera();
+      scene.add(camera);
 
-        cubeContainer.object3D.position.copy(markerPosition);
-        cubeContainer.object3D.rotation.copy(markerRotation);
+      // Renderer
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setClearColor(new THREE.Color('lightgrey'), 0);
+      document.body.appendChild(renderer.domElement);
 
-        animatedCube.setAttribute('visible', 'true');
+      // AR Toolkit Context
+      let arToolkitSource = new THREEx.ArToolkitSource({ sourceType: 'webcam' });
+
+      arToolkitSource.init(() => {
         setTimeout(() => {
-          animatedCube.setAttribute('visible', 'false');
-          cubeContainer.setAttribute('visible', 'true');
-          anchorCreated = true;
-        }, 2000); // Duração da animação
-      }
-    });
+          onResize()
+        }, 2000);
+      });
 
-    function updateCubePosition() {
-      if (lastPosition && lastRotation) {
-        cubeContainer.object3D.position.copy(lastPosition);
-        cubeContainer.object3D.rotation.copy(lastRotation);
+      window.addEventListener('resize', () => onResize());
+
+      let arToolkitContext = new THREEx.ArToolkitContext({
+        cameraParametersUrl: THREEx.ArToolkitContext.baseURL + 'data/camera_para.dat',
+        detectionMode: 'mono'
+      });
+
+      arToolkitContext.init(() => {
+        camera.projectionMatrix.copy(arToolkitContext.getProjectionMatrix());
+      });
+
+      // Marker
+      markerRoot = new THREE.Group();
+      scene.add(markerRoot);
+
+      let arMarkerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
+        type: 'pattern',
+        patternUrl: THREEx.ArToolkitContext.baseURL + 'data/patt.hiro',
+      });
+
+      // Cube
+      let geometry = new THREE.BoxGeometry(1, 1, 1);
+      let material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+      cube = new THREE.Mesh(geometry, material);
+      cube.position.y = 0.5;
+      markerRoot.add(cube);
+
+      // Animation
+      cube.animationMixer = new THREE.AnimationMixer(cube);
+      let positionKF = new THREE.VectorKeyframeTrack('.position', [0, 1, 2], [0, 0, 0, 0, 1, 0, 0, 0.5, 0]);
+      let rotationKF = new THREE.VectorKeyframeTrack('.rotation', [0, 2], [0, 0, 0, 0, Math.PI * 2, 0]);
+      let clip = new THREE.AnimationClip('Action', 2, [positionKF, rotationKF]);
+      let action = cube.animationMixer.clipAction(clip);
+      action.play();
+
+      // Update loop
+      function onResize() {
+        arToolkitSource.onResizeElement();
+        arToolkitSource.copyElementSizeTo(renderer.domElement);
+        if (arToolkitContext.arController !== null) {
+          arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
+        }
+      }
+
+      function update() {
+        if (arToolkitSource.ready !== false) {
+          arToolkitContext.update(arToolkitSource.domElement);
+        }
+        if (cube.animationMixer) {
+          cube.animationMixer.update(0.01);
+        }
+      }
+
+      function render() {
+        renderer.render(scene, camera);
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        update();
+        render();
       }
     }
-
-    document.querySelector('a-scene').addEventListener('renderstart', () => {
-      if (anchorCreated) {
-        updateCubePosition();
-      }
-    });
   </script>
 </body>
 </html>
