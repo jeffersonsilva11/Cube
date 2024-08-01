@@ -19,13 +19,10 @@
     <!-- Custom marker -->
     <a-marker preset="hiro">
       <a-entity position="0 0 0">
-        <a-entity id="animatedModel" gltf-model="url(scene.gltf)" scale="1 1 1" position="0 0.5 0" rotation="0 0 0" 
+        <a-entity id="customModel" gltf-model="url(scene.gltf)" scale="1 1 1" position="0 0.5 0" rotation="0 0 0" 
                   gesture-handler>
           <!-- Animação de aparecimento -->
           <a-animation attribute="position" from="0 -1 0" to="0 0.5 0" dur="1000" easing="ease-out" begin="markerFound"></a-animation>
-          <!-- Animação de flutuação e rotação -->
-          <a-animation attribute="position" from="0 0.5 0" to="0 1 0" direction="alternate" dur="2000" easing="ease-in-out" repeat="indefinite" begin="appearAnimationEnd"></a-animation>
-          <a-animation attribute="rotation" to="0 360 0" dur="5000" easing="linear" repeat="indefinite" begin="appearAnimationEnd"></a-animation>
         </a-entity>
       </a-entity>
     </a-marker>
@@ -71,32 +68,11 @@
     });
 
     let marker = document.querySelector('a-marker');
-    let model = document.getElementById('animatedModel');
+    let model = document.getElementById('customModel');
 
     marker.addEventListener('markerFound', () => {
       model.emit('appearAnimationEnd');
-      model.addEventListener('model-loaded', () => {
-        let model3D = model.getObject3D('mesh');
-        if (model3D) {
-          let mixer = new THREE.AnimationMixer(model3D);
-          model3D.animations.forEach((clip) => {
-            if (clip.name === "walk") {
-              mixer.clipAction(clip).play();
-            }
-          });
-          model.setObject3D('mixer', mixer);
-        }
-      });
     });
-
-    AFRAME.registerComponent('tick-handler', {
-      tick: function (time, timeDelta) {
-        let mixer = model.getObject3D('mixer');
-        if (mixer) mixer.update(timeDelta / 1000);
-      }
-    });
-
-    model.setAttribute('tick-handler', '');
   </script>
 </body>
 </html>
