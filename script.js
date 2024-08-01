@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     model.setAttribute('visible', 'true');
 
     // Ajuste inicial para centralizar o modelo e voltá-lo para a frente
-    model.setAttribute('position', '0 0 -2');
+    model.setAttribute('position', '0 0 -3');
     model.setAttribute('rotation', '0 180 0');
     model.setAttribute('animation-mixer', 'clip: Breathing Idle');
 
